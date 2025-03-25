@@ -1,0 +1,5 @@
+mutation UpdateParkArea($parkArea: ParkAreaInput!) {
+    updateParkArea(parkArea: $parkArea) {
+        type
+    }
+}

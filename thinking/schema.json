@@ -1,0 +1,118 @@
+{
+  "name": "Freie Parkplätze Dresden",
+  "parkAreas": [
+    {
+      "id": 431,
+      "displayName": "Altmarkt",
+      "total": 400,
+      "free": 307,
+      "used": 93,
+      "state": {
+        "name": "freie Stellplätze verfügbar"
+      },
+      "trend": "abnehmend",
+      "lastUpdate": "2025-03-21T15:08:00.000Z",
+      "address": {
+        "street": "Altmarkt",
+        "number": "1",
+        "postalCode": "01067",
+        "city": "Dresden",
+        "location": {
+          "lon": "13.741789104",
+          "lat": "51.0506700789"
+        }
+      },
+      "serviceTime": {
+        "isAllDayOpen": true,
+        "opening": "00:00",
+        "closing": "24:00"
+      },
+
+      "costs": {
+        "costsOnLoss": 84,
+        "fees": [
+          {
+            "type": "weekdayAndTime",
+            "weekdays": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday",
+              "saturday"
+            ],
+            "timeRange": {
+              "from": "08:00",
+              "to": "20:00"
+            },
+            "costPerInterval": {
+              "interval": 5,
+              "intervalType": "minutes",
+              "costs": 0.2
+            }
+          },
+          {
+            "type": "weekdayRate",
+            "weekdays": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday",
+              "saturday"
+            ],
+            "isWholeDay": true,
+            "totalCosts": 12.0
+          },
+          {
+            "type": "weekdayAndTime",
+            "weekdays": "sunday",
+            "includeHoliday": true,
+            "timeRange": {
+              "from": "08:00",
+              "to": "20:00"
+            },
+            "costPerInterval": {
+              "intervalType": "minutes",
+              "interval": 2,
+              "costs": 0.05
+            }
+          },
+          {
+            "type": "weekdayAndTime",
+            "isDaily": true,
+            "timeRange": {
+              "from": "20:00",
+              "to": "08:00"
+            },
+            "isForFree": true
+          },
+          {
+            "type": "weekdayAndTime",
+            "costPerInterval": {
+              "intervalType": "hours",
+              "interval": 1,
+              "costs": 2.5
+            }
+          }
+        ]
+      },
+      "operator": {
+        "website": "https://www.q-park.de",
+        "email": "tiefbauamt-verkehrstechnik@dresden.de"
+      },
+      "statistics": {
+        "lastUpdate": "2025-03-21T15:08:00.000Z",
+        "count": 1,
+        "values": [
+          {
+            "total": 400,
+            "free": 100,
+            "used": 300,
+            "timestamp": "2025-03-21T15:08:00.000Z"
+          }
+        ]
+      }
+    }
+  ]
+}

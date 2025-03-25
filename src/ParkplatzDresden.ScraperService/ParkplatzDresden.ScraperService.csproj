@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3"/>
+        <PackageReference Include="StrawberryShake" Version="15.1.1" />
+        <PackageReference Include="StrawberryShake.Transport.Http" Version="15.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ParkplatzDresden.ScraperLib\ParkplatzDresden.ScraperLib.csproj" />
+    </ItemGroup>
+
+    <Target Name="GraphQLGenerate" BeforeTargets="Build">
+        <Exec Command="dotnet graphql generate" />
+    </Target>
+
+</Project>
