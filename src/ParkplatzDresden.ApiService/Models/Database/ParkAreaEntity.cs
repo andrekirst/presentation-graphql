@@ -9,8 +9,9 @@ public class ParkAreaEntity : BaseEntity
     // public DateTime LastUpdate { get; set; }
     // public string? Trend { get; set; }
     //
-    // public int ParkingSlotEntityId { get; set; }
-    // public ParkingSlotEntity ParkingSlot { get; set; } = null!;
+    public ParkingSlotsEntity? ParkingSlot { get; set; }
+
+    public ICollection<ParkingSlotsHistoryEntity>? ParkingSlotsHistory { get; set; }
     //
     // public int ParkingStateEntityId { get; set; }
     // public ParkingSlotEntity ParkingState { get; set; } = null!;

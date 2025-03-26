@@ -5,17 +5,18 @@ using ParkplatzDresden.ApiService.GraphQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
 
-// Add services to the container.
 builder.Services.AddProblemDetails();
 builder.Services
     .AddGraphQLServer()
     .AddQueryType(q => q.Name(KnownTypeNames.Query))
     .AddType<ParkAreaQueries>()
     .AddMutationType(m => m.Name(KnownTypeNames.Mutation))
-    .AddType<ParkAreaMutations>();
+    .AddType<ParkAreaMutations>()
+    .AddSubscriptionType(s => s.Name(KnownTypeNames.Subscriptions))
+    .AddType<ParkAreaSubscriptions>()
+    .AddInMemorySubscriptions();
 
 builder.Services
     .AddDbContext<ParkplatzDbContext>(optionsBuilder =>
@@ -23,12 +24,10 @@ builder.Services
         optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("postgresdb"));
     });
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
@@ -36,6 +35,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseWebSockets();
 app.MapDefaultEndpoints();
 app.MapGraphQL();
 

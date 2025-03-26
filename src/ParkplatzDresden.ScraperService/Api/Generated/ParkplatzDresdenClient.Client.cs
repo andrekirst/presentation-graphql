@@ -52,6 +52,7 @@ namespace Microsoft.Extensions.DependencyInjection
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::StrawberryShake.Serialization.TimeSpanSerializer>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::StrawberryShake.Serialization.JsonSerializer>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::ScraperService.Api.ParkAreaInputInputValueFormatter>(services);
+            global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializer, global::ScraperService.Api.ParkingSlotsInputInputValueFormatter>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.Serialization.ISerializerResolver>(services, sp => new global::StrawberryShake.Serialization.SerializerResolver(global::System.Linq.Enumerable.Concat(global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.Serialization.ISerializer>>(parentServices), global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::System.Collections.Generic.IEnumerable<global::StrawberryShake.Serialization.ISerializer>>(sp))));
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory<global::ScraperService.Api.IUpdateParkAreaResult>, global::ScraperService.Api.State.UpdateParkAreaResultFactory>(services);
             global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddSingleton<global::StrawberryShake.IOperationResultDataFactory>(services, sp => global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<global::StrawberryShake.IOperationResultDataFactory<global::ScraperService.Api.IUpdateParkAreaResult>>(sp));
@@ -237,12 +238,14 @@ namespace ScraperService.Api
     {
         private global::StrawberryShake.Serialization.IInputValueFormatter _intFormatter = default !;
         private global::StrawberryShake.Serialization.IInputValueFormatter _stringFormatter = default !;
+        private global::StrawberryShake.Serialization.IInputValueFormatter _parkingSlotsInputFormatter = default !;
         public global::System.String TypeName => "ParkAreaInput";
 
         public void Initialize(global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
         {
             _intFormatter = serializerResolver.GetInputValueFormatter("Int");
             _stringFormatter = serializerResolver.GetInputValueFormatter("String");
+            _parkingSlotsInputFormatter = serializerResolver.GetInputValueFormatter("ParkingSlotsInput");
         }
 
         public global::System.Object? Format(global::System.Object? runtimeValue)
@@ -270,6 +273,11 @@ namespace ScraperService.Api
                 fields.Add(new global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>("displayName", FormatDisplayName(input.DisplayName)));
             }
 
+            if (inputInfo.IsParkingSlotsSet)
+            {
+                fields.Add(new global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>("parkingSlots", FormatParkingSlots(input.ParkingSlots)));
+            }
+
             return fields;
         }
 
@@ -286,6 +294,18 @@ namespace ScraperService.Api
             }
 
             return _stringFormatter.Format(input);
+        }
+
+        private global::System.Object? FormatParkingSlots(global::ScraperService.Api.ParkingSlotsInput? input)
+        {
+            if (input is null)
+            {
+                return input;
+            }
+            else
+            {
+                return _parkingSlotsInputFormatter.Format(input);
+            }
         }
     }
 
@@ -329,7 +349,7 @@ namespace ScraperService.Api
                 return false;
             }
 
-            return (global::System.Object.Equals(Id, other.Id)) && DisplayName.Equals(other.DisplayName);
+            return (global::System.Object.Equals(Id, other.Id)) && DisplayName.Equals(other.DisplayName) && ((ParkingSlots is null && other.ParkingSlots is null) || ParkingSlots != null && ParkingSlots.Equals(other.ParkingSlots));
         }
 
         public override global::System.Int32 GetHashCode()
@@ -339,6 +359,11 @@ namespace ScraperService.Api
                 int hash = 5;
                 hash ^= 397 * Id.GetHashCode();
                 hash ^= 397 * DisplayName.GetHashCode();
+                if (ParkingSlots != null)
+                {
+                    hash ^= 397 * ParkingSlots.GetHashCode();
+                }
+
                 return hash;
             }
         }
@@ -347,6 +372,8 @@ namespace ScraperService.Api
         private global::System.Boolean _set_id;
         private global::System.String _value_displayName = default !;
         private global::System.Boolean _set_displayName;
+        private global::ScraperService.Api.ParkingSlotsInput? _value_parkingSlots;
+        private global::System.Boolean _set_parkingSlots;
         public global::System.Int32 Id
         {
             get => _value_id;
@@ -370,11 +397,215 @@ namespace ScraperService.Api
         }
 
         global::System.Boolean global::ScraperService.Api.State.IParkAreaInputInfo.IsDisplayNameSet => _set_displayName;
+
+        public global::ScraperService.Api.ParkingSlotsInput? ParkingSlots
+        {
+            get => _value_parkingSlots;
+            set
+            {
+                _set_parkingSlots = true;
+                _value_parkingSlots = value;
+            }
+        }
+
+        global::System.Boolean global::ScraperService.Api.State.IParkAreaInputInfo.IsParkingSlotsSet => _set_parkingSlots;
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "15.1.1.0")]
+    public partial class ParkingSlotsInputInputValueFormatter : global::StrawberryShake.Serialization.IInputObjectFormatter
+    {
+        private global::StrawberryShake.Serialization.IInputValueFormatter _intFormatter = default !;
+        public global::System.String TypeName => "ParkingSlotsInput";
+
+        public void Initialize(global::StrawberryShake.Serialization.ISerializerResolver serializerResolver)
+        {
+            _intFormatter = serializerResolver.GetInputValueFormatter("Int");
+        }
+
+        public global::System.Object? Format(global::System.Object? runtimeValue)
+        {
+            if (runtimeValue is null)
+            {
+                return null;
+            }
+
+            var input = runtimeValue as global::ScraperService.Api.ParkingSlotsInput;
+            var inputInfo = runtimeValue as global::ScraperService.Api.State.IParkingSlotsInputInfo;
+            if (input is null || inputInfo is null)
+            {
+                throw new global::System.ArgumentException(nameof(runtimeValue));
+            }
+
+            var fields = new global::System.Collections.Generic.List<global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>>();
+            if (inputInfo.IsTotalSet)
+            {
+                fields.Add(new global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>("total", FormatTotal(input.Total)));
+            }
+
+            if (inputInfo.IsFreeSet)
+            {
+                fields.Add(new global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>("free", FormatFree(input.Free)));
+            }
+
+            if (inputInfo.IsUsedSet)
+            {
+                fields.Add(new global::System.Collections.Generic.KeyValuePair<global::System.String, global::System.Object?>("used", FormatUsed(input.Used)));
+            }
+
+            return fields;
+        }
+
+        private global::System.Object? FormatTotal(global::System.Int32? input)
+        {
+            if (input is null)
+            {
+                return input;
+            }
+            else
+            {
+                return _intFormatter.Format(input);
+            }
+        }
+
+        private global::System.Object? FormatFree(global::System.Int32? input)
+        {
+            if (input is null)
+            {
+                return input;
+            }
+            else
+            {
+                return _intFormatter.Format(input);
+            }
+        }
+
+        private global::System.Object? FormatUsed(global::System.Int32? input)
+        {
+            if (input is null)
+            {
+                return input;
+            }
+            else
+            {
+                return _intFormatter.Format(input);
+            }
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "15.1.1.0")]
+    public partial class ParkingSlotsInput : global::ScraperService.Api.State.IParkingSlotsInputInfo, global::System.IEquatable<ParkingSlotsInput>
+    {
+        public override global::System.Boolean Equals(global::System.Object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((ParkingSlotsInput)obj);
+        }
+
+        public virtual global::System.Boolean Equals(ParkingSlotsInput? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return (global::System.Object.Equals(Total, other.Total)) && global::System.Object.Equals(Free, other.Free) && global::System.Object.Equals(Used, other.Used);
+        }
+
+        public override global::System.Int32 GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 5;
+                if (Total != null)
+                {
+                    hash ^= 397 * Total.GetHashCode();
+                }
+
+                if (Free != null)
+                {
+                    hash ^= 397 * Free.GetHashCode();
+                }
+
+                if (Used != null)
+                {
+                    hash ^= 397 * Used.GetHashCode();
+                }
+
+                return hash;
+            }
+        }
+
+        private global::System.Int32? _value_total;
+        private global::System.Boolean _set_total;
+        private global::System.Int32? _value_free;
+        private global::System.Boolean _set_free;
+        private global::System.Int32? _value_used;
+        private global::System.Boolean _set_used;
+        public global::System.Int32? Total
+        {
+            get => _value_total;
+            set
+            {
+                _set_total = true;
+                _value_total = value;
+            }
+        }
+
+        global::System.Boolean global::ScraperService.Api.State.IParkingSlotsInputInfo.IsTotalSet => _set_total;
+
+        public global::System.Int32? Free
+        {
+            get => _value_free;
+            set
+            {
+                _set_free = true;
+                _value_free = value;
+            }
+        }
+
+        global::System.Boolean global::ScraperService.Api.State.IParkingSlotsInputInfo.IsFreeSet => _set_free;
+
+        public global::System.Int32? Used
+        {
+            get => _value_used;
+            set
+            {
+                _set_used = true;
+                _value_used = value;
+            }
+        }
+
+        global::System.Boolean global::ScraperService.Api.State.IParkingSlotsInputInfo.IsUsedSet => _set_used;
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "15.1.1.0")]
     public enum ParkAreaUpdatedPayloadType
     {
+        Unchanged,
         Created,
         Updated
     }
@@ -388,6 +619,7 @@ namespace ScraperService.Api
         {
             return serializedValue switch
             {
+                "UNCHANGED" => ParkAreaUpdatedPayloadType.Unchanged,
                 "CREATED" => ParkAreaUpdatedPayloadType.Created,
                 "UPDATED" => ParkAreaUpdatedPayloadType.Updated,
                 _ => throw new global::StrawberryShake.GraphQLClientException($"String value '{serializedValue}' can't be converted to enum ParkAreaUpdatedPayloadType")};
@@ -397,6 +629,7 @@ namespace ScraperService.Api
         {
             return runtimeValue switch
             {
+                ParkAreaUpdatedPayloadType.Unchanged => "UNCHANGED",
                 ParkAreaUpdatedPayloadType.Created => "CREATED",
                 ParkAreaUpdatedPayloadType.Updated => "UPDATED",
                 _ => throw new global::StrawberryShake.GraphQLClientException($"Enum ParkAreaUpdatedPayloadType value '{runtimeValue}' can't be converted to string")};
@@ -733,6 +966,18 @@ namespace ScraperService.Api.State
         global::System.Boolean IsIdSet { get; }
 
         global::System.Boolean IsDisplayNameSet { get; }
+
+        global::System.Boolean IsParkingSlotsSet { get; }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "15.1.1.0")]
+    internal interface IParkingSlotsInputInfo
+    {
+        global::System.Boolean IsTotalSet { get; }
+
+        global::System.Boolean IsFreeSet { get; }
+
+        global::System.Boolean IsUsedSet { get; }
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "15.1.1.0")]

@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ParkplatzDresden.ScraperLib\ParkplatzDresden.ScraperLib.csproj" />
+      <ProjectReference Include="..\ParkplatzDresden.ServiceDefaults\ParkplatzDresden.ServiceDefaults.csproj" />
     </ItemGroup>
 
     <Target Name="GraphQLGenerate" BeforeTargets="Build">

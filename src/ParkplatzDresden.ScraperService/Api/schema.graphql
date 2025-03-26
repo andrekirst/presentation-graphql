@@ -1,6 +1,7 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscriptions
 }
 
 type Query {
@@ -12,9 +13,20 @@ type Mutation {
   updateParkArea(parkArea: ParkAreaInput!): ParkAreaUpdatedPayload!
 }
 
+type Subscriptions {
+  parkingSlotsUpdated: ParkingSlots
+}
+
+type ParkingSlots {
+  total: Int
+  free: Int
+  used: Int
+}
+
 input ParkAreaInput {
   id: Int!
   displayName: String!
+  parkingSlots: ParkingSlotsInput
 }
 
 type ParkAreaUpdatedPayload {
@@ -24,11 +36,19 @@ type ParkAreaUpdatedPayload {
 type ParkArea {
   id: Int!
   displayName: String!
+  parkingSlots: ParkingSlots
 }
 
 enum ParkAreaUpdatedPayloadType {
+  UNCHANGED
   CREATED
   UPDATED
+}
+
+input ParkingSlotsInput {
+  total: Int
+  free: Int
+  used: Int
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

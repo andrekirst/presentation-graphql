@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ParkplatzDresden.ApiService.Database;
@@ -11,9 +12,11 @@ using ParkplatzDresden.ApiService.Database;
 namespace ParkplatzDresden.ApiService.Migrations
 {
     [DbContext(typeof(ParkplatzDbContext))]
-    partial class ParkplatzDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250325122235_add_parkingslots")]
+    partial class add_parkingslots
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,7 @@ namespace ParkplatzDresden.ApiService.Migrations
                     b.ToTable("ParkAreas");
                 });
 
-            modelBuilder.Entity("ParkplatzDresden.ApiService.Models.Database.ParkingSlotsEntity", b =>
+            modelBuilder.Entity("ParkplatzDresden.ApiService.Models.Database.ParkingSlotEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,14 +77,14 @@ namespace ParkplatzDresden.ApiService.Migrations
                     b.HasIndex("ParkAreaEntityId")
                         .IsUnique();
 
-                    b.ToTable("ParkingSlots", (string)null);
+                    b.ToTable("ParkingSlotEntity");
                 });
 
-            modelBuilder.Entity("ParkplatzDresden.ApiService.Models.Database.ParkingSlotsEntity", b =>
+            modelBuilder.Entity("ParkplatzDresden.ApiService.Models.Database.ParkingSlotEntity", b =>
                 {
                     b.HasOne("ParkplatzDresden.ApiService.Models.Database.ParkAreaEntity", "ParkArea")
                         .WithOne("ParkingSlot")
-                        .HasForeignKey("ParkplatzDresden.ApiService.Models.Database.ParkingSlotsEntity", "ParkAreaEntityId")
+                        .HasForeignKey("ParkplatzDresden.ApiService.Models.Database.ParkingSlotEntity", "ParkAreaEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

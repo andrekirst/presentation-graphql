@@ -3,7 +3,7 @@ using HtmlAgilityPack;
 
 namespace ParkplatzDresden.ScraperLib.Tests;
 
-public class StartPageTests
+public class ParkAreaTests
 {
     private readonly Scraper _scraper = new();
 
@@ -14,8 +14,15 @@ public class StartPageTests
         return Task.FromResult(htmlDocument);
     };
 
-    private Task<List<ParkArea>> _scrape() => _scraper.ScrapeAsync(_source);
-    
+    private readonly Func<string, Task<HtmlDocument>> _sourceSubsite = _ =>
+    {
+        var htmlDocument = new HtmlDocument();
+        htmlDocument.Load(File.OpenRead("TestSites/Einzelseite_Altmarkt.html"));
+        return Task.FromResult(htmlDocument);
+    };
+
+    private Task<List<ParkArea>> _scrape() => _scraper.ScrapeAsync(_source, _sourceSubsite);
+
     [Fact]
     public async Task Expect_52_ParkAreas()
     {
@@ -36,14 +43,16 @@ public class StartPageTests
     {
         var result = await _scrape();
         var altmarkt = result.Single(r => r.DisplayName == "Altmarkt");
-        altmarkt.ParkingSlot?.Total.Should().Be(400);
+        altmarkt.ParkingSlot.Should().NotBeNull();
+        altmarkt.ParkingSlot.Total.Should().Be(400);
     }
     
     [Fact]
-    public async Task Expect_ParkArea_Altmarkt_has_303_free_spaces()
+    public async Task Expect_ParkArea_Altmarkt_has_373_free_spaces()
     {
         var result = await _scrape();
         var altmarkt = result.Single(r => r.DisplayName == "Altmarkt");
-        altmarkt.ParkingSlot?.Free.Should().Be(303);
+        altmarkt.ParkingSlot.Should().NotBeNull();
+        altmarkt.ParkingSlot.Free.Should().Be(373);
     }
 }

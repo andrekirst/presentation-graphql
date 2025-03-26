@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ParkplatzDresden.ApiService.Database;
@@ -11,9 +12,11 @@ using ParkplatzDresden.ApiService.Database;
 namespace ParkplatzDresden.ApiService.Migrations
 {
     [DbContext(typeof(ParkplatzDbContext))]
-    partial class ParkplatzDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250325124754_rename_parkingslots_table")]
+    partial class rename_parkingslots_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

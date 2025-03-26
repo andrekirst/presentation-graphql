@@ -31,6 +31,9 @@
       <None Update="TestSites\StartPage.html">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="TestSites\Einzelseite_Altmarkt.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

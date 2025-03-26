@@ -14,17 +14,20 @@ public class AuditInterceptor : SaveChangesInterceptor
             return base.SavedChangesAsync(eventData, result, cancellationToken);
         }
 
-        foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
+        foreach (var entry in context.ChangeTracker.Entries())
         {
-            switch (entry)
+            if (entry.Entity is BaseEntity baseEntity)
             {
-                case { State: EntityState.Added }:
-                    entry.Property(p => p.CreatedAt).CurrentValue = DateTime.UtcNow;
-                    entry.Property(p => p.ChangedAt).CurrentValue = DateTime.UtcNow;
-                    break;
-                case { State: EntityState.Modified }:
-                    entry.Property(p => p.ChangedAt).CurrentValue = DateTime.UtcNow;
-                    break;
+                switch (entry)
+                {
+                    case { State: EntityState.Added }:
+                        baseEntity.CreatedAt = DateTime.UtcNow;
+                        baseEntity.ChangedAt = DateTime.UtcNow;
+                        break;
+                    case { State: EntityState.Modified }:
+                        baseEntity.ChangedAt = DateTime.UtcNow;
+                        break;
+                }
             }
         }
         
