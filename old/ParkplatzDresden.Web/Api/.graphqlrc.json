@@ -1,0 +1,21 @@
+{
+  "schema": "schema.graphql",
+  "documents": "**/*.graphql",
+  "extensions": {
+    "strawberryShake": {
+      "name": "ParkplatzDresdenClient",
+      "namespace": "ParkplatzDresden.Web.Api",
+      "url": "http://localhost:5475/graphql/",
+      "records": {
+        "inputs": false,
+        "entities": false
+      },
+      "transportProfiles": [
+        {
+          "default": "Http",
+          "subscription": "WebSocket"
+        }
+      ]
+    }
+  }
+}

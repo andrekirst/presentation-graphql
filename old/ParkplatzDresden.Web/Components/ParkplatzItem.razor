@@ -1,0 +1,28 @@
+<MudPaper>
+    <MudListItem T="string" Icon="@Icons.Material.Filled.LocalParking" />
+    <div class="">@_total / @_free</div>
+</MudPaper>
+
+@code {
+    [Parameter] public int ParkAreaId { get; set; }
+
+    private string _displayName = string.Empty;
+    private int? _free;
+    private int? _total;
+
+    protected override Task OnParametersSetAsync()
+    {
+        var session = ApiClient
+            .ParkingSlotsUpdated
+            .Watch(ParkAreaId)
+            .Subscribe(async result =>
+            {
+                var parkingSlots = result.Data?.ParkingSlotsUpdated.ParkingSlots;
+                _free = parkingSlots?.Free;
+                _total = parkingSlots?.Total;
+                await InvokeAsync(StateHasChanged);
+            });
+        
+        return Task.CompletedTask;
+    }
+}

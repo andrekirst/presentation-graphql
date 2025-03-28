@@ -1,0 +1,23 @@
+<h3>Parkplätze</h3>
+
+@if (_parkAreaIds is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    @foreach (var parkAreaId in _parkAreaIds)
+    {
+        <ParkplatzItem ParkAreaId="@parkAreaId"></ParkplatzItem>
+    }
+}
+
+@code {
+    private List<int>? _parkAreaIds = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var executionResult = await ApiClient.GetParkplatzList.ExecuteAsync();
+        _parkAreaIds = executionResult.Data?.ParkAreas.Select(s => s.Id).ToList() ?? [];
+    }
+}
