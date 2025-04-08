@@ -4,6 +4,16 @@ schema {
   subscription: ParkAreaSubscriptions
 }
 
+type ParkArea {
+  address: Address
+  publicTransport(limit: Int): PublicTransportInformation!
+  displayName: String!
+  lastUpdate: DateTime
+  total: Int
+  free: Int
+  id: Int!
+}
+
 type ParkAreaQueries {
   parkAreaById(id: Int!): ParkArea!
   parkAreas(order: [ParkAreaSortInput!]): [ParkArea!]!
@@ -18,17 +28,64 @@ type ParkAreaSubscriptions {
   parkingStateChanged(id: Int!): ParkingStateChangedPayload!
 }
 
+type Address {
+  street: String
+  number: String
+  postalCode: String
+  city: String
+  location: Location
+}
+
+type PublicTransportInformation {
+  departures: [Departure!]!
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
 input ParkAreaSortInput {
   displayName: SortEnumType
   lastUpdate: SortEnumType
   total: SortEnumType
   free: SortEnumType
+  address: AddressSortInput
   id: SortEnumType
 }
 
 enum SortEnumType {
   ASC
   DESC
+}
+
+input AddressSortInput {
+  street: SortEnumType
+  number: SortEnumType
+  postalCode: SortEnumType
+  city: SortEnumType
+  location: LocationSortInput
+}
+
+input LocationSortInput {
+  latitude: SortEnumType
+  longitute: SortEnumType
+}
+
+type Departure {
+  lineNumber: String!
+  direction: String!
+  type: String!
+  departureTimeAt: DateTime!
+  departureTimeInMinutes: Int!
+}
+
+type Location {
+  latitude: Float!
+  longitute: Float!
+}
+
+type ParkingStateChangedPayload {
+  icon: String!
+  name: String!
 }
 
 type ParkingSlotsChangedPayload {
@@ -63,20 +120,6 @@ type ParkAreaAddedPayload {
   changeStatus: ChangeStatus!
 }
 
-type ParkArea {
-  displayName: String!
-  lastUpdate: DateTime
-  total: Int
-  free: Int
-  parkingSlotHistories: [ParkingSlotHistory!]!
-  id: Int!
-}
-
-type ParkingStateChangedPayload {
-  icon: String!
-  name: String!
-}
-
 enum ChangeStatus {
   UNMODIFIED
   CREATED
@@ -89,15 +132,6 @@ scalar LocalTime
 input LocationInput {
   latitude: Float!
   longitute: Float!
-}
-
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime
-
-type ParkingSlotHistory {
-  total: Int
-  free: Int
-  parkArea: ParkArea!
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

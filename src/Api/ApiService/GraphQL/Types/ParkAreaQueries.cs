@@ -12,6 +12,7 @@ public class ParkAreaQueries
         CancellationToken cancellationToken = default) =>
         mediator.Send(new GetParkAreaByIdQuery(id), cancellationToken);
 
+    [UseSorting]
     public Task<IQueryable<ParkArea>> GetParkAreas(
         [Service] IMediator mediator,
         CancellationToken cancellationToken = default) =>

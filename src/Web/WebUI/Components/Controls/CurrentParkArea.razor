@@ -1,0 +1,68 @@
+@rendermode InteractiveServer
+
+<MudText>Gesamt: @_total</MudText>
+<MudText>Frei: @_free</MudText>
+
+<MudProgressLinear Value="GetPercentage()" Color="@GetProgressColor()"/>
+
+@if (_change is not null && _change != 0)
+{
+    <MudIcon Color="@(_change > 0 ? Color.Success : Color.Error)" Icon="@(_change > 0 ? Icons.Material.Filled.ArrowUpward : Icons.Material.Filled.ArrowDownward)"/>
+    <MudText Color="@(_change > 0 ? Color.Success : Color.Error)">@_change</MudText>
+
+    @if (_lastUpdate is not null)
+    {
+        <MudText Typo="Typo.caption" Color="Color.Secondary">@_lastUpdate.Value.ToString("HH:mm")</MudText>
+    }
+}
+
+@code {
+    private double _free;
+    private double _total;
+    private int? _change = null;
+    private DateTime? _lastUpdate = null;
+    private IDisposable? _subscription;
+    
+    [Parameter]
+    public int ParkAreaId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ApiClient.GetParkAreaById.ExecuteAsync(ParkAreaId);
+        var parkArea = result.Data?.ParkAreaById;
+
+        _total = parkArea?.Total ?? 0;
+        _free = parkArea?.Free ?? 0;
+
+        await InvokeAsync(StateHasChanged);
+
+        _subscription = ApiClient.ParkingSlotsChanged
+            .Watch(ParkAreaId)
+            .Subscribe(OnParkingSlotsChanged);
+    }
+    
+    private void OnParkingSlotsChanged(IOperationResult<IParkingSlotsChangedResult> obj)
+    {
+        var data = obj.Data?.ParkingSlotsChanged;
+
+        _ = InvokeAsync(() =>
+        {
+            _total = data?.Total ?? 0;
+            _free = data?.Free ?? 0;
+            _lastUpdate = data?.LastUpdate.LocalDateTime;
+            _change = data?.Change;
+
+            StateHasChanged();
+        });
+    }
+    
+    private double GetPercentage() => _free / _total * 100;
+
+    private Color GetProgressColor() =>
+        GetPercentage() switch
+        {
+            > 50 => Color.Success,
+            > 20 => Color.Warning,
+            _ => Color.Error
+        };
+}

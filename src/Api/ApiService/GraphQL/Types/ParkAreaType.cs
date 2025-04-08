@@ -13,6 +13,7 @@ public class ParkAreaType : ObjectType<ParkArea>
         
         descriptor
             .Field("publicTransport")
-            .ResolveWith<ParkAreaPublicTransportationInformationResolvers>(r => r.GetNearbyPublicTransportInformationAsync(default!, default!, default!));
+            .Argument("limit", a => a.Type<IntType>())
+            .ResolveWith<ParkAreaPublicTransportationInformationResolvers>(r => r.GetNearbyPublicTransportInformationAsync(default!, default!, default!, default!));
     }
 }

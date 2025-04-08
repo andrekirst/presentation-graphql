@@ -1,0 +1,46 @@
+@using System.Timers
+@rendermode InteractiveServer
+
+<MudTable Items="_departures" RowsPerPage="10" ItemSize="40">
+    <HeaderContent>
+        <MudTh>Linie</MudTh>
+        <MudTh>Ziel</MudTh>
+        <MudTh>in Minuten</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Linie">@context.LineNumber</MudTd>
+        <MudTd DataLabel="Ziel">@context.Direction</MudTd>
+        <MudTd DataLabel="in Minuten">@context.DepartureTimeInMinutes</MudTd>
+    </RowTemplate>
+</MudTable>
+
+<MudIconButton Icon="@Icons.Material.Filled.Refresh" OnClick="GetPublicTransportInformationsAsync"></MudIconButton>
+
+@code {
+    private IReadOnlyList<IGetPublicTransportInformations_ParkAreaById_PublicTransport_Departures>? _departures;
+    private Timer? _timer;
+
+    [Parameter]
+    public int ParkAreaId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPublicTransportInformationsAsync();
+
+        _timer = new Timer(TimeSpan.FromMinutes(1));
+        _timer.Elapsed += OnTimerOnElapsed;
+        _timer.Start();
+    }
+
+    private async void OnTimerOnElapsed(object? o, ElapsedEventArgs elapsedEventArgs)
+    {
+        await GetPublicTransportInformationsAsync();
+    }
+
+    private async Task GetPublicTransportInformationsAsync()
+    {
+        var result = await ApiClient.GetPublicTransportInformations.ExecuteAsync(ParkAreaId, 6);
+        _departures = result.Data?.ParkAreaById.PublicTransport.Departures;
+        await InvokeAsync(StateHasChanged);
+    }
+}

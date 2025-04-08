@@ -1,0 +1,28 @@
+@page "/parkarea-detail/{id:int}"
+@rendermode InteractiveServer
+
+<h3>Name des Parkplatzes</h3>
+
+<MudGrid>
+    <MudItem xs="12" sm="6">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
+            <CurrentParkArea ParkAreaId="@Id" />
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6">
+        <ParkAreaPublicTransportInformation ParkAreaId="@Id" />
+    </MudItem>
+    <MudItem xs="12" sm="6">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
+            Karte
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">Diagramme</MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+}

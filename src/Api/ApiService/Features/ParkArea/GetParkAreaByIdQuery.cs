@@ -29,6 +29,7 @@ public class GetParkAreaByIdQueryHandler(AppDbContext dbContext) : IRequestHandl
             .Where(pa => pa.Id == request.Id)
             .Select(pa => new Models.Presentation.ParkArea
             {
+                Id = pa.Id,
                 DisplayName = pa.DisplayName ?? string.Empty,
                 Free = pa.Free,
                 LastUpdate = pa.LastUpdate,

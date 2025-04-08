@@ -9,6 +9,8 @@ namespace ApiService.Features.ParkArea;
 public class GetPublicTransportationQuery(Models.Presentation.ParkArea parkArea) : IRequest<PublicTransportInformation>
 {
     public Models.Presentation.ParkArea ParkArea { get; } = parkArea;
+
+    public int? Limit { get; set; }
 }
 
 public class PublicTransportInformation
@@ -38,8 +40,13 @@ public class GetPublicTransportationQueryHandler(
         {
             return new PublicTransportInformation();
         }
+
+        var options = new GetDepartureMonitorForStopIdOptions
+        {
+            Limit = request.Limit
+        };
         
-        var departureMonitor = await departureMonitorService.GetDepartureMonitorForStopIdAsync(stopId, cancellationToken);
+        var departureMonitor = await departureMonitorService.GetDepartureMonitorForStopIdAsync(stopId,options, cancellationToken);
 
         return new PublicTransportInformation
         {

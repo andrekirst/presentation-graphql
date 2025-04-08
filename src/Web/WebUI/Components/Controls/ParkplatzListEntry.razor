@@ -1,6 +1,8 @@
 @rendermode InteractiveServer
 @inject ISnackbar Snackbar
 
+@implements IDisposable
+
 <MudPaper Width="300px">
     @if (_displayName is null)
     {
@@ -14,7 +16,7 @@
                     <MudText Typo="Typo.h6">@_displayName</MudText>
                 </CardHeaderContent>
                 <CardHeaderActions>
-                    <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.ArrowCircleRight" />
+                    <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.ArrowCircleRight" OnClick="OnDetailClick" />
                 </CardHeaderActions>
             </MudCardHeader>
             <MudCardContent>
@@ -46,6 +48,7 @@
     private string? _displayName = null;
     private int? _change = null;
     private DateTime? _lastUpdate = null;
+    private IDisposable? _subscription;
 
     [Parameter] public int ParkAreaId { get; set; }
 
@@ -60,7 +63,8 @@
 
         await InvokeAsync(StateHasChanged);
 
-        ApiClient.ParkingSlotsChanged.Watch(ParkAreaId)
+        _subscription = ApiClient.ParkingSlotsChanged
+            .Watch(ParkAreaId)
             .Subscribe(OnParkingSlotsChanged);
     }
 
@@ -75,11 +79,8 @@
             _lastUpdate = data?.LastUpdate.LocalDateTime;
             _change = data?.Change;
 
-            // Snackbar.Add($"{_displayName} has now {_free} sapces");
-
             StateHasChanged();
         });
-
     }
 
     private double GetPercentage() => _free / _total * 100;
@@ -91,4 +92,14 @@
             > 20 => Color.Warning,
             _ => Color.Error
         };
+
+    private void OnDetailClick()
+    {
+        NavManager.NavigateTo($"/parkarea-detail/{ParkAreaId}");
+    }
+
+    public void Dispose()
+    {
+        Snackbar?.Dispose();
+    }
 }

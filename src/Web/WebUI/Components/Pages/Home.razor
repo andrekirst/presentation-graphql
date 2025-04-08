@@ -24,7 +24,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await ApiClient.GetParkAreaIds.ExecuteAsync();
-        _result = result.Data?.ParkAreas.ToList();
+        var taskA = ApiClient.GetParkAreaIds.ExecuteAsync();
+        await taskA.ContinueWith(task => _result = task.Result.Data?.ParkAreas.ToList());
+        
+        
+        // var result = await ApiClient.GetParkAreaIds.ExecuteAsync();
+        // _result = result.Data?.ParkAreas.ToList();
     }
 }

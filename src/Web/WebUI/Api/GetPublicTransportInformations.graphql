@@ -1,0 +1,11 @@
+query GetPublicTransportInformations($id: Int!, $limit: Int) {
+    parkAreaById(id: $id) {
+        publicTransport(limit: $limit) {
+            departures {
+                lineNumber
+                departureTimeInMinutes
+                direction
+            }
+        }
+    }
+}

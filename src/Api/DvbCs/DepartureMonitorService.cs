@@ -6,16 +6,22 @@ namespace DvbCs;
 
 public interface IDepartureMonitorService
 {
-    Task<DepartureMonitor?> GetDepartureMonitorForStopIdAsync(string stopId, CancellationToken cancellationToken = default);
+    Task<DepartureMonitor?> GetDepartureMonitorForStopIdAsync(string stopId, GetDepartureMonitorForStopIdOptions options, CancellationToken cancellationToken = default);
 }
 
 public class DepartureMonitorService(IHttpClientFactory httpClientFactory) : IDepartureMonitorService
 {
-    public async Task<DepartureMonitor?> GetDepartureMonitorForStopIdAsync(string stopId, CancellationToken cancellationToken = default)
+    public async Task<DepartureMonitor?> GetDepartureMonitorForStopIdAsync(string stopId, GetDepartureMonitorForStopIdOptions options, CancellationToken cancellationToken = default)
     {
         var httpClient = httpClientFactory.CreateClient(HttpClientNames.Dvb.DepartureMonitior);
 
-        var respone = await httpClient.GetAsync($"?stopId={stopId}", cancellationToken);
+        var parameters = $"?stopId={stopId}";
+        if (options.Limit is not null && options.Limit > 0)
+        {
+            parameters += $"&limit={options.Limit}";
+        }
+        
+        var respone = await httpClient.GetAsync(parameters, cancellationToken);
 
         if (!respone.IsSuccessStatusCode)
         {
@@ -32,6 +38,11 @@ public class DepartureMonitorService(IHttpClientFactory httpClientFactory) : IDe
                 : null
             : null;
     }
+}
+
+public class GetDepartureMonitorForStopIdOptions
+{
+    public int? Limit { get; set; }
 }
 
 internal class MicrosoftDateFormatConverter : JsonConverter<DateTime>
