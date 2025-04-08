@@ -1,0 +1,8 @@
+query GetParkAreaById($id: Int!) {
+    parkAreaById(id: $id) {
+        displayName
+        total
+        free
+        lastUpdate
+    }
+}

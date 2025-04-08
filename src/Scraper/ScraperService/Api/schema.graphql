@@ -1,0 +1,90 @@
+schema {
+  query: ParkAreaQueries
+  mutation: ParkAreaMutations
+  subscription: ParkAreaSubscriptions
+}
+
+type ParkAreaQueries {
+  parkAreaById(id: Int!): ParkArea!
+  parkAreas: [ParkArea!]!
+}
+
+type ParkAreaMutations {
+  addParkArea(payload: AddParkAreaPayloadInput!): ParkAreaAddedPayload!
+}
+
+type ParkAreaSubscriptions {
+  parkingSlotsChanged(id: Int!): ParkingSlotsChangedPayload!
+  parkingStateChanged(id: Int!): ParkingStateChangedPayload!
+}
+
+type ParkingSlotsChangedPayload {
+  total: Int
+  free: Int
+  lastUpdate: DateTime!
+}
+
+input AddParkAreaPayloadInput {
+  parkAreaId: Int!
+  displayName: String!
+  lastUpdate: DateTime!
+  total: Int
+  free: Int
+  parkingStateName: String
+  parkingStateIcon: String
+  operatorWebsite: String
+  operatorEmail: String
+  addressStreet: String
+  addressNumber: String
+  addressPostalCode: String
+  addressCity: String
+  location: LocationInput
+  serviceTimeIsAllDayOpen: Boolean!
+  serviceTimeOpening: LocalTime
+  serviceTimeClosing: LocalTime
+  regionDisplayName: String!
+}
+
+type ParkAreaAddedPayload {
+  changeStatus: ChangeStatus!
+}
+
+type ParkArea {
+  displayName: String!
+  lastUpdate: DateTime
+  total: Int
+  free: Int
+  parkingSlotHistories: [ParkingSlotHistory!]!
+  id: Int!
+}
+
+type ParkingStateChangedPayload {
+  icon: String!
+  name: String!
+}
+
+enum ChangeStatus {
+  UNMODIFIED
+  CREATED
+  MODIFIED
+}
+
+"The LocalTime scalar type is a local time string (i.e., with no associated timezone) in 24-hr HH:mm:ss."
+scalar LocalTime
+
+input LocationInput {
+  latitude: Float!
+  longitute: Float!
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+type ParkingSlotHistory {
+  total: Int
+  free: Int
+  parkArea: ParkArea!
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION

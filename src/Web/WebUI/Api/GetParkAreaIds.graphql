@@ -1,0 +1,5 @@
+query GetParkAreaIds {
+    parkAreas(order: { displayName: ASC }) {
+        id
+    }
+}

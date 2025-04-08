@@ -1,0 +1,8 @@
+subscription ParkingSlotsChanged($id: Int!) {
+    parkingSlotsChanged(id: $id) {
+        total
+        free
+        lastUpdate
+        change
+    }
+}

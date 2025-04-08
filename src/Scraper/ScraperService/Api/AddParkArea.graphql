@@ -1,0 +1,5 @@
+mutation AddParkArea($payload: AddParkAreaPayloadInput!) {
+  addParkArea(payload: $payload) {
+    changeStatus
+  }
+}

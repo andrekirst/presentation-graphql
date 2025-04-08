@@ -1,0 +1,30 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+<PageTitle>Parkplätze in Dresden</PageTitle>
+
+@if (_result is null)
+{
+    <MudSkeleton />
+}
+else
+{
+    <MudGrid Style="align-items: stretch;" Justify="Justify.FlexStart">
+        @foreach (var item in _result)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3" xl="2">
+                <ParkplatzListEntry ParkAreaId=@item.Id />
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    private List<IGetParkAreaIds_ParkAreas>? _result;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ApiClient.GetParkAreaIds.ExecuteAsync();
+        _result = result.Data?.ParkAreas.ToList();
+    }
+}

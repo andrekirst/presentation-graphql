@@ -1,0 +1,12 @@
+query GetParkAreaById($id: Int!) {
+    parkAreaById(id: $id) {
+        displayName
+        lastUpdate
+        total
+        free
+        parkingSlotHistories {
+            total
+            free
+        }
+    }
+}
