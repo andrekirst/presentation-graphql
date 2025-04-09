@@ -11,6 +11,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<OperatorEntity> Operators => Set<OperatorEntity>();
     public DbSet<RegionEntity> Regions => Set<RegionEntity>();
     public DbSet<AddressEntity> Addresses => Set<AddressEntity>();
+    public DbSet<YearStatisticsAggregateEntity> YearStatisticsAggregates => Set<YearStatisticsAggregateEntity>();
+    public DbSet<YearStatisticsValuesEntity> YearStatisticsValues => Set<YearStatisticsValuesEntity>();
+    public DbSet<MonthStatisticsAggregateEntity> MonthStatisticsAggregates => Set<MonthStatisticsAggregateEntity>();
+    public DbSet<MonthStatisticsValuesEntity> MonthStatisticsValues => Set<MonthStatisticsValuesEntity>();
+    public DbSet<DayStatisticsAggregateEntity> DayStatisticsAggregates => Set<DayStatisticsAggregateEntity>();
+    public DbSet<DayStatisticsValuesEntity> DayStatisticsValues => Set<DayStatisticsValuesEntity>();
+    public DbSet<HourStatisticsAggregateEntity> HourStatisticsAggregates => Set<HourStatisticsAggregateEntity>();
+    public DbSet<HourStatisticsValuesEntity> HourStatisticsValues => Set<HourStatisticsValuesEntity>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

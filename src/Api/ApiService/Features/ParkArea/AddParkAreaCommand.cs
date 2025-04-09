@@ -1,4 +1,5 @@
 using ApiService.Database;
+using ApiService.Features.ParkArea.Statistics;
 using ApiService.GraphQL.Types;
 using ApiService.Models.Persistance;
 using FluentValidation;
@@ -63,7 +64,8 @@ public class AddParkAreaCommand(AddParkAreaPayload payload) : IRequest<ParkAreaA
 
 public class AddParkAreaCommandHandler(
     AppDbContext dbContext,
-    ITopicEventSender sender) : IRequestHandler<AddParkAreaCommand, ParkAreaAddedPayload>
+    ITopicEventSender sender,
+    IMediator mediator) : IRequestHandler<AddParkAreaCommand, ParkAreaAddedPayload>
 {
     public async Task<ParkAreaAddedPayload> Handle(AddParkAreaCommand request, CancellationToken cancellationToken)
     {
@@ -83,7 +85,16 @@ public class AddParkAreaCommandHandler(
             return await CreateAsync(parkAreaId, payload, cancellationToken);
         }
 
-        return await UpdateAsync(entity, parkAreaId, payload, cancellationToken);
+        var addedPayload = await UpdateAsync(entity, parkAreaId, payload, cancellationToken);
+
+        await mediator.Publish(new StatisticsNotification
+        {
+            Free = request.Payload.Free!.Value,
+            ParkAreaId = request.Payload.ParkAreaId,
+            When = request.Payload.LastUpdate.ToLocalTime()
+        }, cancellationToken);
+        
+        return addedPayload;
     }
 
     private async Task<ParkAreaAddedPayload> UpdateAsync(ParkAreaEntity entity, int parkAreaId, AddParkAreaPayload payload, CancellationToken cancellationToken)
