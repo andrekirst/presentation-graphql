@@ -25,4 +25,16 @@ public sealed class ParkAreaEntity : BaseEntity
 
     public int RegionId { get; set; }
     public RegionEntity Region { get; set; }
+
+    public ICollection<YearStatisticsAggregateEntity> YearStatisticsAggregates { get; set; }
+    public ICollection<YearStatisticsValuesEntity> YearStatisticsValues { get; set; }
+    
+    public ICollection<MonthStatisticsAggregateEntity> MonthStatisticsAggregates { get; set; }
+    public ICollection<MonthStatisticsValuesEntity> MonthStatisticsValues { get; set; }
+    
+    public ICollection<DayStatisticsAggregateEntity> DayStatisticsAggregates { get; set; }
+    public ICollection<DayStatisticsValuesEntity> DayStatisticsValues { get; set; }
+    
+    public ICollection<HourStatisticsAggregateEntity> HourStatisticsAggregates { get; set; }
+    public ICollection<HourStatisticsValuesEntity> HourStatisticsValues { get; set; }
 }

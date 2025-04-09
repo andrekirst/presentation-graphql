@@ -3,6 +3,7 @@ using System;
 using ApiService.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409061050_add_statistics")]
+    partial class add_statistics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,7 +270,7 @@ namespace ApiService.Migrations
 
                     b.HasIndex("ParkAreaId");
 
-                    b.ToTable("MonthStatisticsAggregates");
+                    b.ToTable("MonthStatisticsAggregateEntity");
                 });
 
             modelBuilder.Entity("ApiService.Models.Persistance.MonthStatisticsValuesEntity", b =>
@@ -303,7 +306,7 @@ namespace ApiService.Migrations
 
                     b.HasIndex("ParkAreaId");
 
-                    b.ToTable("MonthStatisticsValues");
+                    b.ToTable("MonthStatisticsValuesEntity");
                 });
 
             modelBuilder.Entity("ApiService.Models.Persistance.OperatorEntity", b =>
