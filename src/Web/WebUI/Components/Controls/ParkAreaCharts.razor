@@ -1,0 +1,34 @@
+@using System.Collections.ObjectModel
+@using LiveChartsCore
+@using LiveChartsCore.SkiaSharpView
+@rendermode InteractiveServer
+
+<CartesianChart Series="Series"></CartesianChart>
+
+@code {
+    [Parameter]
+    public int ParkAreaId { get; set; }
+
+    public ObservableCollection<ParkAreaChartValue> ParkAreaChartValues { get; set; } = [];
+    public ObservableCollection<ISeries> Series { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ApiClient.GetParkAreaDayChartValues.ExecuteAsync(ParkAreaId);
+        var hours = result.Data?.ParkAreaById.Statistics.Day.Today.Hours ?? [];
+
+        ParkAreaChartValues = new ObservableCollection<ParkAreaChartValue>(
+            hours.Select(h => new ParkAreaChartValue
+            {
+                Average = h.Average,
+                Maximum = h.Maximum,
+                Minimum = h.Minimum
+            })
+        );
+        
+        Series =
+        [
+            new LineSeries<ParkAreaChartValue>(ParkAreaChartValues)
+        ];
+    }
+}

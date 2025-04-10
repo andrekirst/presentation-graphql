@@ -1,0 +1,15 @@
+query GetParkAreaDayChartValues($parkAreaId: Int!) {
+    parkAreaById(id: $parkAreaId) {
+        statistics {
+            day {
+                today {
+                    hours {
+                        average
+                        minimum
+                        maximum
+                    }
+                }
+            }
+        }
+    }
+}

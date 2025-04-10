@@ -1,3 +1,6 @@
+using ApiService.Features.ParkArea.Statistics;
+using MediatR;
+
 namespace ApiService.Models.Presentation;
 
 public class ParkArea : Model
@@ -9,15 +12,35 @@ public class ParkArea : Model
     
     public Address? Address { get; set; }
 
-    // TODO
-    // public Statistics GetStatistics() => new Statistics();
+    public Statistics GetStatistics() => new Statistics();
 }
 
-// public class Statistics
-// {
-//     public YearStatistic GetYearStatistic(int year) => new YearStatistic(year);
-// }
-//
-// public class YearStatistic(int year)
-// {
-// }
+public class Statistics
+{
+    public DayStatistic GetDay() => new DayStatistic();
+}
+
+public class DayStatistic
+{
+    public async Task<TodayStatistic> GetTodayAsync([Service] IMediator mediator, CancellationToken cancellationToken)
+    {
+        return await mediator.Send(new GetTodayStatisticsQuery(), cancellationToken);
+    }
+}
+
+public class SpecificDayStatistic
+{
+    public List<HourValue> Hours { get; set; } = [];
+}
+
+public class TodayStatistic
+{
+    public List<HourValue> Hours { get; set; } = [];
+}
+
+public class HourValue
+{
+    public int Maximum { get; set; }
+    public int Minimum { get; set; }
+    public double Average { get; set; }
+}

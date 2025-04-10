@@ -7,6 +7,7 @@ schema {
 type ParkArea {
   address: Address
   publicTransport(limit: Int): PublicTransportInformation!
+  statistics: Statistics!
   displayName: String!
   lastUpdate: DateTime
   total: Int
@@ -40,6 +41,10 @@ type PublicTransportInformation {
   departures: [Departure!]!
 }
 
+type Statistics {
+  day: DayStatistic!
+}
+
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime
 
@@ -68,6 +73,10 @@ input AddressSortInput {
 input LocationSortInput {
   latitude: SortEnumType
   longitute: SortEnumType
+}
+
+type DayStatistic {
+  today: TodayStatistic!
 }
 
 type Departure {
@@ -132,6 +141,16 @@ scalar LocalTime
 input LocationInput {
   latitude: Float!
   longitute: Float!
+}
+
+type TodayStatistic {
+  hours: [HourValue!]!
+}
+
+type HourValue {
+  maximum: Int!
+  minimum: Int!
+  average: Float!
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
